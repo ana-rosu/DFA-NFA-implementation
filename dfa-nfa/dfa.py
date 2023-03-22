@@ -1,14 +1,14 @@
-def check(file, word):
+from helper_functions import inputValidation, printPath
+
+def DFA(file, word):
     with open(file) as automata:
-        nrStates = int(automata.readline())
         alphabet = automata.readline().split()
         initialState = int(automata.readline())
         finalStates = [int(x) for x in automata.readline().split()]
         # input validation
-        for letter in word:
-            if letter not in alphabet:
+        if not inputValidation(alphabet, word):
                 print("The word can only contain ", end="")
-                print(*alphabet)
+                print(', '.join(alphabet) +  "!!!")
                 return
         # lambda word
         if word == "":
@@ -34,25 +34,18 @@ def check(file, word):
 
         # processing the word
         state = initialState
-        road = [initialState]
+        path = [initialState]
         for letter in word:
             state = delta[state][letter]
-            road.append(state)
+            path.append(state)
 
         # check if the word is accepted
-        if  road[len(road)-1] in finalStates:
+        if  path[len(path)-1] in finalStates:
             print(f'The word {word} is accepted!')
-            print('The road is: ')
-            formatRoad = ""
-            for state in road:
-                formatRoad += str(state) + "->"
-            print(formatRoad[:-2])
+            print('Path: ', end = "")
+            print(printPath(path))
         else:
             print("Rejected!")
 
-
-
 word = input("Word = ")
-# word = ""
-
-check("dfa1.txt", word)
+DFA("dfa2.txt", word)
